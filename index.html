@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Tarjetas Flash</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2efff;
+            color: #29243a;
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #6846b8;
+            margin-bottom: 10px;
+        }
+
+        .contenido {
+            background: white;
+            max-width: 600px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #00000015;
+        }
+
+        .informacion {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .barra {
+            width: 100%;
+            height: 10px;
+            background: #e5e0f2;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .avance {
+            height: 100%;
+            width: 20%;
+            background: #8060cf;
+            border-radius: 10px;
+        }
+
+        .tarjeta {
+            min-height: 250px;
+            border: 2px solid #ded5f5;
+            border-radius: 12px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .tarjeta h2 {
+            color: #6846b8;
+        }
+
+        .tarjeta p {
+            font-size: 19px;
+            line-height: 1.5;
+        }
+
+        button {
+            border: none;
+            background: #8060cf;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #6846b8;
+        }
+
+        button:disabled {
+            background: #c9c4d3;
+            cursor: not-allowed;
+        }
+
+        .boton-voltear {
+            background: #eee9fa;
+            color: #6846b8;
+        }
+
+        .botones {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .mensaje {
+            text-align: center;
+            margin-top: 20px;
+            color: #6846b8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Mis Tarjetas Flash</h1>
+        <p>Aprende y repasa conceptos de programación</p>
+    </header>
+
+    <main class="contenido">
+
+        <div class="informacion">
+            <span id="numeroTarjeta">Tarjeta 1 de 5</span>
+            <span id="porcentaje">20% completado</span>
+        </div>
+
+        <div class="barra">
+            <div class="avance" id="avance"></div>
+        </div>
+
+        <div class="tarjeta">
+            <h2 id="tituloTarjeta">Pregunta</h2>
+
+            <p id="textoTarjeta">
+                ¿Qué es JavaScript?
+            </p>
+
+            <button class="boton-voltear" id="botonVoltear">
+                Mostrar respuesta
+            </button>
+        </div>
+
+        <div class="botones">
+            <button id="botonAnterior">Anterior</button>
+            <button id="botonSiguiente">Siguiente</button>
+        </div>
+
+        <p class="mensaje" id="mensaje"></p>
+
+    </main>
+
+    <script>
+
+        // Preguntas y respuestas
+        const tarjetas = [
+            {
+                pregunta: "¿Qué es JavaScript?",
+                respuesta: "Es un lenguaje de programación que permite agregar interactividad a las páginas web."
+            },
+            {
+                pregunta: "¿Qué es una variable?",
+                respuesta: "Es un espacio donde podemos guardar información para utilizarla en un programa."
+            },
+            {
+                pregunta: "¿Para qué sirve React?",
+                respuesta: "Es una biblioteca de JavaScript que permite crear interfaces de usuario."
+            },
+            {
+                pregunta: "¿Qué es HTML?",
+                respuesta: "Es el lenguaje que se utiliza para organizar el contenido de una página web."
+            },
+            {
+                pregunta: "¿Qué es CSS?",
+                respuesta: "Es el lenguaje que permite dar estilos, colores y organizar una página web."
+            }
+        ];
+
+        // Variables de control
+        let numeroActual = 0;
+        let mostrandoRespuesta = false;
+
+        // Elementos de la página
+        const textoTarjeta = document.getElementById("textoTarjeta");
+        const tituloTarjeta = document.getElementById("tituloTarjeta");
+        const botonVoltear = document.getElementById("botonVoltear");
+        const botonAnterior = document.getElementById("botonAnterior");
+        const botonSiguiente = document.getElementById("botonSiguiente");
+
+        // Mostrar la tarjeta actual
+        function mostrarTarjeta() {
+
+            let tarjeta = tarjetas[numeroActual];
+
+            if (mostrandoRespuesta) {
+                tituloTarjeta.textContent = "Respuesta";
+                textoTarjeta.textContent = tarjeta.respuesta;
+                botonVoltear.textContent = "Ver pregunta";
+            } else {
+                tituloTarjeta.textContent = "Pregunta";
+                textoTarjeta.textContent = tarjeta.pregunta;
+                botonVoltear.textContent = "Mostrar respuesta";
+            }
+
+            // Actualizar el progreso
+            let progreso = ((numeroActual + 1) / tarjetas.length) * 100;
+
+            document.getElementById("numeroTarjeta").textContent =
+                "Tarjeta " + (numeroActual + 1) + " de " + tarjetas.length;
+
+            document.getElementById("porcentaje").textContent =
+                progreso + "% completado";
+
+            document.getElementById("avance").style.width =
+                progreso + "%";
+
+            // Controlar los botones
+            botonAnterior.disabled = numeroActual === 0;
+
+            if (numeroActual === tarjetas.length - 1) {
+                botonSiguiente.textContent = "Volver a empezar";
+                document.getElementById("mensaje").textContent =
+                    "¡Has llegado a la última tarjeta!";
+            } else {
+                botonSiguiente.textContent = "Siguiente";
+                document.getElementById("mensaje").textContent = "";
+            }
+        }
+
+        // Mostrar u ocultar la respuesta
+        botonVoltear.addEventListener("click", function() {
+            mostrandoRespuesta = !mostrandoRespuesta;
+            mostrarTarjeta();
+        });
+
+        // Pasar a la siguiente tarjeta
+        botonSiguiente.addEventListener("click", function() {
+
+            if (numeroActual < tarjetas.length - 1) {
+                numeroActual++;
+            } else {
+                numeroActual = 0;
+            }
+
+            mostrandoRespuesta = false;
+            mostrarTarjeta();
+        });
+
+        // Regresar a la tarjeta anterior
+        botonAnterior.addEventListener("click", function() {
+
+            if (numeroActual > 0) {
+                numeroActual--;
+            }
+
+            mostrandoRespuesta = false;
+            mostrarTarjeta();
+        });
+
+        // Iniciar la aplicación
+        mostrarTarjeta();
+
+    </script>
+
+</body>
+</html>
